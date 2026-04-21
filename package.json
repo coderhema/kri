@@ -1,0 +1,9 @@
+{
+  "name": "kri",
+  "version": "0.1.0",
+  "description": "Universal agentic bootstrapper for JS/TS codebases",
+  "type": "module",
+  "bin": { "kri": "bin/kri.js" },
+  "files": ["bin", "core", "modes", "index.js"],
+  "dependencies": { "openai": "^4.0.0" }
+}
