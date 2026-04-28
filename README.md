@@ -62,5 +62,3 @@ Now your site has an AI layer.
 > Your website wasn’t broken.
 > It just didn’t know how to think.
 > Now it does.
-
-— Tadeo
