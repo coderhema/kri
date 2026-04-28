@@ -3,7 +3,38 @@
   "version": "0.1.0",
   "description": "Universal agentic bootstrapper for JS/TS codebases",
   "type": "module",
-  "bin": { "kri": "bin/kri.js" },
-  "files": ["bin", "core", "modes", "index.js"],
-  "dependencies": { "openai": "^4.0.0" }
+  "bin": {
+    "kri": "bin/kri"
+  },
+  "files": [
+    "bin",
+    "server",
+    "agent",
+    "overlay",
+    "injector",
+    "daemon",
+    "utils",
+    "README.md"
+  ],
+  "main": "server/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coderhema/kri.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/coderhema/kri/issues"
+  },
+  "homepage": "https://github.com/coderhema/kri#readme",
+  "dependencies": {
+    "express": "^4.21.0",
+    "playwright": "^1.49.0",
+    "level": "^10.0.1",
+    "openai": "^4.0.0"
+  }
 }

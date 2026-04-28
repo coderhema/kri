@@ -1,0 +1,43 @@
+#!/usr/bin/env node
+
+const fs = require('fs');
+const path = require('path');
+const { execSync } = require('child_process');
+
+const KRI_CONFIG_PATH = path.join(process.env.HOME, '.kri', 'config.json');
+
+function ensureConfigDir() {
+  const dir = path.dirname(KRI_CONFIG_PATH);
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+}
+
+function addSite(url) {
+  ensureConfigDir();
+  let config = {};
+  if (fs.existsSync(KRI_CONFIG_PATH)) {
+    config = JSON.parse(fs.readFileSync(KRI_CONFIG_PATH, 'utf8'));
+  }
+  
+  const id = new URL(url).hostname;
+  config[id] = { url, enabled: true };
+  
+  fs.writeFileSync(KRI_CONFIG_PATH, JSON.stringify(config, null, 2));
+  console.log(`✅ Added site: ${id}`);
+}
+
+function startServer() {
+  console.log('🚀 Starting Kri server...');
+  execSync('node server/index.js', { stdio: 'inherit' });
+}
+
+const args = process.argv.slice(2);
+
+if (args[0] === 'add' && args[1]) {
+  addSite(args[1]);
+} else if (args[0] === 'start') {
+  startServer();
+} else {
+  console.log('Usage:\n  kri add <url>      - Add a client site\n  kri start           - Start the agency dashboard');
+}
