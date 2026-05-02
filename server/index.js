@@ -70,9 +70,12 @@ app.post('/api/agent/execute', async (req, res) => {
   });
   
   try {
+    await operator.init();
     const result = await operator.executeTask(userInput);
+    await operator.close();
     res.json(result);
   } catch (err) {
+    await operator.close();
     res.status(500).json({ success: false, error: err.message });
   }
 });

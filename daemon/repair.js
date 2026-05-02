@@ -1,6 +1,7 @@
 "use strict";
 
 const { LLM } = require('../agent/llm');
+const { FlueSession } = require('../agent/flue-session');
 const { Memory } = require('../agent/memory');
 
 module.exports = class Daemon {
@@ -8,8 +9,13 @@ module.exports = class Daemon {
     this.siteId = siteId;
     this.config = config;
     this.llm = new LLM(config.agent);
+    this.flue = new FlueSession(config.agent?.model || 'anthropic/claude-sonnet-4-6');
     this.memory = new Memory(siteId);
     this.lastDOM = null;
+  }
+
+  async init() {
+    await this.flue.init();
   }
 
   async monitor() {
@@ -52,7 +58,7 @@ module.exports = class Daemon {
     const fixes = [];
     
     for (const change of changedSelectors) {
-      const newSelector = await this.llm.repairSelector(change);
+      const newSelector = await this.flue.repairSelector(change);
       if (newSelector) {
         await this.memory.updateSelector(change.old, newSelector);
         fixes.push({ old: change.old, new: newSelector });
