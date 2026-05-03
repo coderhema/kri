@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kri — Give any website a soul</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --white: #ffffff;
+      --off: #fafaf9;
+      --black: #0a0a0a;
+      --gray-1: #111111;
+      --gray-2: #444444;
+      --gray-3: #888888;
+      --gray-4: #cccccc;
+      --gray-5: #eeeeee;
+      --accent: #0a0a0a;
+      --mono: 'DM Mono', monospace;
+      --sans: 'DM Sans', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--sans);
+      background: var(--white);
+      color: var(--black);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 48px;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--gray-5);
+    }
+
+    .nav-logo {
+      font-family: var(--mono);
+      font-size: 15px;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      color: var(--black);
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 13px;
+      color: var(--gray-3);
+      text-decoration: none;
+      font-weight: 400;
+      transition: color 0.15s;
+    }
+
+    .nav-links a:hover { color: var(--black); }
+
+    .nav-cta {
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--white) !important;
+      background: var(--black);
+      padding: 8px 18px;
+      border-radius: 4px;
+      text-decoration: none;
+      transition: opacity 0.15s !important;
+    }
+
+    .nav-cta:hover { opacity: 0.8; color: var(--white) !important; }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 120px 48px 80px;
+      text-align: center;
+      position: relative;
+      align-items: center;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--gray-3);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 40px;
+      padding: 6px 14px;
+      border: 1px solid var(--gray-5);
+      border-radius: 100px;
+      opacity: 0;
+      animation: fadeUp 0.6s ease 0.1s forwards;
+    }
+
+    .badge-dot {
+      width: 6px; height: 6px;
+      background: #22c55e;
+      border-radius: 50%;
+      animation: pulse 2s ease infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    h1 {
+      font-family: var(--sans);
+      font-size: clamp(42px, 7vw, 84px);
+      font-weight: 300;
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+      color: var(--black);
+      max-width: 820px;
+      margin-bottom: 28px;
+      opacity: 0;
+      animation: fadeUp 0.7s ease 0.2s forwards;
+    }
+
+    h1 em {
+      font-style: italic;
+      font-weight: 300;
+      color: var(--gray-3);
+    }
+
+    .hero-sub {
+      font-size: 16px;
+      font-weight: 300;
+      color: var(--gray-2);
+      max-width: 480px;
+      line-height: 1.7;
+      margin-bottom: 48px;
+      opacity: 0;
+      animation: fadeUp 0.7s ease 0.3s forwards;
+    }
+
+    .hero-form {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      border: 1px solid var(--gray-4);
+      border-radius: 8px;
+      overflow: hidden;
+      max-width: 420px;
+      width: 100%;
+      opacity: 0;
+      animation: fadeUp 0.7s ease 0.4s forwards;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      background: var(--white);
+    }
+
+    .hero-form:focus-within {
+      border-color: var(--black);
+      box-shadow: 0 0 0 3px rgba(0,0,0,0.06);
+    }
+
+    .hero-form-row { display: none; }
+
+    .hero-form input {
+      flex: 1;
+      padding: 15px 20px;
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 300;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: var(--black);
+      min-width: 0;
+    }
+
+    .hero-form input::placeholder { color: var(--gray-4); }
+
+    .hero-form button {
+      flex-shrink: 0;
+      align-self: stretch;
+      padding: 0 24px;
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 500;
+      background: var(--black);
+      color: var(--white);
+      border: none;
+      border-left: 1px solid var(--gray-4);
+      cursor: pointer;
+      transition: opacity 0.15s;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+
+    .hero-form button:hover { opacity: 0.8; }
+
+    .hero-note {
+      margin-top: 14px;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--gray-4);
+      opacity: 0;
+      animation: fadeUp 0.7s ease 0.5s forwards;
+    }
+
+    /* LOGOS */
+    .logos {
+      padding: 64px 48px;
+      text-align: center;
+      border-top: 1px solid var(--gray-5);
+      border-bottom: 1px solid var(--gray-5);
+    }
+
+    .logos-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gray-4);
+      margin-bottom: 32px;
+    }
+
+    .logos-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 48px;
+      flex-wrap: wrap;
+    }
+
+    .logo-tag {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--gray-4);
+      font-weight: 400;
+    }
+
+    /* HOW IT WORKS */
+    .section {
+      padding: 100px 48px;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gray-3);
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 300;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 60px;
+      color: var(--black);
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--gray-5);
+      border: 1px solid var(--gray-5);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .step {
+      background: var(--white);
+      padding: 40px 32px;
+      transition: background 0.2s;
+    }
+
+    .step:hover { background: var(--off); }
+
+    .step-num {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--gray-4);
+      margin-bottom: 20px;
+      letter-spacing: 0.06em;
+    }
+
+    .step-title {
+      font-size: 16px;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      margin-bottom: 10px;
+      color: var(--black);
+    }
+
+    .step-desc {
+      font-size: 14px;
+      font-weight: 300;
+      color: var(--gray-2);
+      line-height: 1.65;
+    }
+
+    /* WHAT KRI DOES */
+    .features {
+      padding: 0 48px 100px;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1px;
+      background: var(--gray-5);
+      border: 1px solid var(--gray-5);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .feature {
+      background: var(--white);
+      padding: 36px 32px;
+      transition: background 0.2s;
+    }
+
+    .feature:hover { background: var(--off); }
+
+    .feature-icon {
+      font-family: var(--mono);
+      font-size: 18px;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .feature-title {
+      font-size: 15px;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .feature-desc {
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--gray-2);
+      line-height: 1.65;
+    }
+
+    .verify-code {
+      margin-top: 40px;
+    }
+
+    .verify-tabs {
+      margin-top: 40px;
+    }
+
+    .vtab-headers {
+      display: flex;
+      gap: 0;
+    }
+
+    .vtab-btn {
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 500;
+      padding: 10px 20px;
+      background: #1a1a1a;
+      color: #555;
+      border: none;
+      cursor: pointer;
+      letter-spacing: 0.04em;
+      transition: color 0.15s, background 0.15s;
+      border-radius: 0;
+    }
+
+    .vtab-btn:first-child { border-radius: 8px 0 0 0; }
+    .vtab-btn:last-child { border-radius: 0 8px 0 0; }
+
+    .vtab-btn.active {
+      background: #222;
+      color: #fff;
+    }
+
+    .vtab-btn:hover { color: #ccc; }
+    .code-section {
+      padding: 0 48px 100px;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .code-block {
+      background: var(--black);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .code-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 20px;
+      border-bottom: 1px solid #222;
+    }
+
+    .code-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .code-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+    }
+
+    .code-dot:nth-child(1) { background: #ff5f57; }
+    .code-dot:nth-child(2) { background: #febc2e; }
+    .code-dot:nth-child(3) { background: #28c840; }
+
+    .code-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: #555;
+      letter-spacing: 0.06em;
+    }
+
+    .code-body {
+      padding: 28px 28px;
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.8;
+      color: #aaa;
+      overflow-x: auto;
+    }
+
+    .code-body .comment { color: #444; }
+    .code-body .key { color: #7dd3fc; }
+    .code-body .val { color: #86efac; }
+    .code-body .str { color: #fca5a5; }
+    .code-body .sym { color: #e2e8f0; }
+
+    /* PRICING */
+    .pricing {
+      padding: 0 48px 100px;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--gray-5);
+      border: 1px solid var(--gray-5);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .plan {
+      background: var(--white);
+      padding: 36px 28px;
+      position: relative;
+    }
+
+    .plan.featured { background: var(--black); }
+
+    .plan-name {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gray-3);
+      margin-bottom: 16px;
+    }
+
+    .plan.featured .plan-name { color: #555; }
+
+    .plan-price {
+      font-size: 36px;
+      font-weight: 300;
+      letter-spacing: -0.04em;
+      color: var(--black);
+      margin-bottom: 4px;
+    }
+
+    .plan.featured .plan-price { color: var(--white); }
+
+    .plan-period {
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--gray-3);
+      margin-bottom: 28px;
+    }
+
+    .plan.featured .plan-period { color: #555; }
+
+    .plan-features {
+      list-style: none;
+      margin-bottom: 32px;
+    }
+
+    .plan-features li {
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--gray-2);
+      padding: 7px 0;
+      border-bottom: 1px solid var(--gray-5);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .plan.featured .plan-features li {
+      color: #aaa;
+      border-color: #1a1a1a;
+    }
+
+    .plan-features li::before {
+      content: '—';
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--gray-4);
+      flex-shrink: 0;
+    }
+
+    .plan.featured .plan-features li::before { color: #333; }
+
+    .plan-btn {
+      display: block;
+      width: 100%;
+      padding: 11px;
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 500;
+      text-align: center;
+      border-radius: 4px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: opacity 0.15s;
+      border: 1px solid var(--gray-4);
+      color: var(--black);
+      background: transparent;
+      letter-spacing: 0.02em;
+    }
+
+    .plan.featured .plan-btn {
+      background: var(--white);
+      color: var(--black);
+      border-color: var(--white);
+    }
+
+    .plan-btn:hover { opacity: 0.7; }
+
+    /* WAITLIST SECTION */
+    .waitlist {
+      padding: 100px 48px;
+      text-align: center;
+      border-top: 1px solid var(--gray-5);
+      background: var(--off);
+    }
+
+    .waitlist h2 {
+      font-size: clamp(28px, 4vw, 48px);
+      font-weight: 300;
+      letter-spacing: -0.04em;
+      margin-bottom: 16px;
+    }
+
+    .waitlist p {
+      font-size: 15px;
+      font-weight: 300;
+      color: var(--gray-2);
+      margin-bottom: 40px;
+    }
+
+    .waitlist-form {
+      display: flex;
+      border: 1px solid var(--gray-4);
+      border-radius: 8px;
+      overflow: hidden;
+      max-width: 420px;
+      width: 100%;
+      margin: 0 auto;
+      background: var(--white);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .waitlist-form:focus-within {
+      border-color: var(--black);
+      box-shadow: 0 0 0 3px rgba(0,0,0,0.06);
+    }
+
+    .waitlist-form-row { display: none; }
+
+    .waitlist-form input {
+      flex: 1;
+      padding: 15px 20px;
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 300;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: var(--black);
+      min-width: 0;
+    }
+
+    .waitlist-form input::placeholder { color: var(--gray-4); }
+
+    .waitlist-form button {
+      flex-shrink: 0;
+      align-self: stretch;
+      padding: 0 24px;
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 500;
+      background: var(--black);
+      color: var(--white);
+      border: none;
+      border-left: 1px solid var(--gray-4);
+      cursor: pointer;
+      transition: opacity 0.15s;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+
+    .waitlist-form button:hover { opacity: 0.8; }
+
+    /* FOOTER */
+    footer {
+      padding: 32px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--gray-5);
+    }
+
+    .footer-logo {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--gray-3);
+      text-decoration: none;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+    }
+
+    .footer-links a {
+      font-size: 12px;
+      color: var(--gray-4);
+      text-decoration: none;
+      font-family: var(--mono);
+      transition: color 0.15s;
+    }
+
+    .footer-links a:hover { color: var(--black); }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* SUCCESS STATE */
+    .success-msg {
+      display: none;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: #22c55e;
+      margin-top: 12px;
+      letter-spacing: 0.04em;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      nav { padding: 16px 24px; }
+      .nav-links { display: none; }
+      .hero { padding: 100px 24px 60px; }
+      .section, .features, .code-section, .pricing { padding-left: 24px; padding-right: 24px; }
+      .steps { grid-template-columns: 1fr; }
+      .feature-grid { grid-template-columns: 1fr; }
+      .pricing-grid { grid-template-columns: 1fr; }
+      .waitlist { padding: 60px 24px; }
+      footer { padding: 24px; flex-direction: column; gap: 16px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="nav-logo">kri</a>
+    <ul class="nav-links">
+      <li><a href="#how">How it works</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="https://github.com/coderhema/kri" target="_blank">GitHub</a></li>
+      <li><a href="#waitlist" class="nav-cta">Join waitlist</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-badge">
+      <span class="badge-dot"></span>
+      Open source · Now in early access
+    </div>
+    <h1>Give any website<br /><em>a soul.</em></h1>
+    <p class="hero-sub">
+      Kri wraps any existing website with an autonomous agent layer. No rebuild. No code changes. Your clients get AI — in 30 minutes.
+    </p>
+    <div class="hero-form">
+      <input type="email" placeholder="your@agency.com" id="hero-email" />
+      <button onclick="handleWaitlist('hero-email', 'hero-success')">Join waitlist</button>
+    </div>
+    <p class="hero-note" id="hero-success" style="display:none; color: #22c55e;">✓ You're on the list.</p>
+    <p class="hero-note">Free to self-host. No credit card required.</p>
+  </section>
+
+  <!-- LOGOS -->
+  <div class="logos reveal">
+    <p class="logos-label">Works on any stack</p>
+    <div class="logos-row">
+      <span class="logo-tag">WordPress</span>
+      <span class="logo-tag">Shopify</span>
+      <span class="logo-tag">Webflow</span>
+      <span class="logo-tag">Legacy PHP</span>
+      <span class="logo-tag">Custom HTML</span>
+      <span class="logo-tag">Any CMS</span>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <section class="section" id="how">
+    <p class="section-label reveal">How it works</p>
+    <h2 class="section-title reveal">Three steps.<br />One wrapped site.</h2>
+    <div class="steps reveal">
+      <div class="step">
+        <p class="step-num">01</p>
+        <p class="step-title">Point Kri at the site</p>
+        <p class="step-desc">Give Kri a URL. It loads the site in a Playwright session and maps the DOM. No access to the codebase needed.</p>
+      </div>
+      <div class="step">
+        <p class="step-num">02</p>
+        <p class="step-title">Kri injects the layer</p>
+        <p class="step-desc">A lightweight overlay is injected. The agent connects to your LLM backend. The site now has memory, voice, and chat.</p>
+      </div>
+      <div class="step">
+        <p class="step-num">03</p>
+        <p class="step-title">Users talk. Kri acts.</p>
+        <p class="step-desc">Users interact via voice or chat. Kri's agent navigates the site, completes tasks, and remembers context across sessions.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features">
+    <p class="section-label reveal">What Kri does</p>
+    <h2 class="section-title reveal">Not a chatbot.<br />An operator.</h2>
+    <div class="feature-grid reveal">
+      <div class="feature">
+        <span class="feature-icon">⟳</span>
+        <p class="feature-title">Task completion</p>
+        <p class="feature-desc">Users say "add this to my cart" and Kri does it. The agent navigates, clicks, and fills forms like a human would.</p>
+      </div>
+      <div class="feature">
+        <span class="feature-icon">◎</span>
+        <p class="feature-title">Site memory</p>
+        <p class="feature-desc">SQLite memory per site. Kri remembers past interactions, user preferences, and DOM states across sessions.</p>
+      </div>
+      <div class="feature">
+        <span class="feature-icon">↻</span>
+        <p class="feature-title">Self-healing daemon</p>
+        <p class="feature-desc">A background daemon watches the site every 5 minutes. Broken selectors, layout shifts — Kri detects and repairs automatically.</p>
+      </div>
+      <div class="feature">
+        <span class="feature-icon">◈</span>
+        <p class="feature-title">Agency dashboard</p>
+        <p class="feature-desc">Manage all client sites from one place. See health status, toggle agents, monitor usage. White label ready.</p>
+      </div>
+      <div class="feature">
+        <span class="feature-icon">◇</span>
+        <p class="feature-title">Voice + chat</p>
+        <p class="feature-desc">Users interact via voice or text. Kri handles both. No extra integration required on the client's end.</p>
+      </div>
+      <div class="feature">
+        <span class="feature-icon">○</span>
+        <p class="feature-title">Open source core</p>
+        <p class="feature-desc">The engine is fully open. Self-host it, fork it, extend it. No black box on your client's site.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- VERIFICATION -->
+  <section class="section" style="padding-top: 0;">
+    <p class="section-label reveal">Security</p>
+    <h2 class="section-title reveal">You must own it<br />to wrap it.</h2>
+    <div class="steps reveal">
+      <div class="step">
+        <p class="step-num">01</p>
+        <p class="step-title">Add your site</p>
+        <p class="step-desc">Enter the client's URL in your Kri dashboard. A unique verification token is generated for that domain.</p>
+      </div>
+      <div class="step">
+        <p class="step-num">02</p>
+        <p class="step-title">Verify ownership</p>
+        <p class="step-desc">Add one meta tag to the site's HTML. No DNS changes. No file uploads. Just paste and save.</p>
+      </div>
+      <div class="step">
+        <p class="step-num">03</p>
+        <p class="step-title">Kri activates</p>
+        <p class="step-desc">Kri checks for the token before going live. Verified sites only. Full audit trail kept per domain.</p>
+      </div>
+    </div>
+    <div class="verify-tabs reveal">
+      <div class="vtab-headers">
+        <button class="vtab-btn active" onclick="switchTab(this, 'tab-meta')">Meta tag</button>
+        <button class="vtab-btn" onclick="switchTab(this, 'tab-file')">File</button>
+        <button class="vtab-btn" onclick="switchTab(this, 'tab-code')">Codebase</button>
+      </div>
+      <div class="code-block" style="border-radius: 0 0 8px 8px;">
+        <div class="code-body" id="tab-meta">
+          <span class="comment">// Paste inside your site's &lt;head&gt; tag</span><br />
+          <span class="sym">&lt;meta </span><span class="key">name</span><span class="sym">="</span><span class="str">kri-verify</span><span class="sym">" </span><span class="key">content</span><span class="sym">="</span><span class="val">kri_tok_your_unique_token</span><span class="sym">" /&gt;</span>
+        </div>
+        <div class="code-body" id="tab-file" style="display:none;">
+          <span class="comment">// Upload this file to your domain root</span><br />
+          <span class="comment">// yoursite.com/kri-verify.txt</span><br /><br />
+          <span class="val">kri-verification: kri_tok_your_unique_token</span>
+        </div>
+        <div class="code-body" id="tab-code" style="display:none;">
+          <span class="comment">// Add to your codebase — JS, PHP, or any backend</span><br /><br />
+          <span class="comment">// JS</span><br />
+          <span class="key">window</span><span class="sym">.</span><span class="val">KRI_VERIFY</span> <span class="sym">= </span><span class="str">"kri_tok_your_unique_token"</span><span class="sym">;</span><br /><br />
+          <span class="comment">// PHP</span><br />
+          <span class="sym">&lt;?php </span><span class="key">define</span><span class="sym">(</span><span class="str">'KRI_VERIFY'</span><span class="sym">, </span><span class="str">'kri_tok_your_unique_token'</span><span class="sym">); ?&gt;</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CODE -->
+  <section class="code-section">
+    <p class="section-label reveal">Setup</p>
+    <h2 class="section-title reveal">Deploy in minutes.</h2>
+    <div class="code-block reveal">
+      <div class="code-header">
+        <div class="code-dots">
+          <div class="code-dot"></div>
+          <div class="code-dot"></div>
+          <div class="code-dot"></div>
+        </div>
+        <span class="code-label">kri.config.js</span>
+      </div>
+      <div class="code-body">
+<span class="comment">// 1. Install</span><br />
+<span class="sym">$</span> <span class="val">npm install -g kri-agent</span><br /><br />
+<span class="comment">// 2. Configure</span><br />
+<span class="key">export default</span> {<br />
+&nbsp;&nbsp;<span class="key">site</span>: <span class="str">"https://yourclient.com"</span>,<br />
+&nbsp;&nbsp;<span class="key">llm</span>: <span class="str">"claude-sonnet-4-6"</span>,<br />
+&nbsp;&nbsp;<span class="key">memory</span>: <span class="val">true</span>,<br />
+&nbsp;&nbsp;<span class="key">daemon</span>: <span class="val">true</span>,<br />
+&nbsp;&nbsp;<span class="key">voice</span>: <span class="val">true</span><br />
+}<br /><br />
+<span class="comment">// 3. Wrap</span><br />
+<span class="sym">$</span> <span class="val">kri start</span><br /><br />
+<span class="comment">// ✓ Agent is live. Site has a soul.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="pricing" id="pricing">
+    <p class="section-label reveal">Pricing</p>
+    <h2 class="section-title reveal">Simple. Honest.</h2>
+    <div class="pricing-grid reveal">
+      <div class="plan">
+        <p class="plan-name">Free</p>
+        <p class="plan-price">$0</p>
+        <p class="plan-period">self-hosted, forever</p>
+        <ul class="plan-features">
+          <li>1 site</li>
+          <li>Open source engine</li>
+          <li>Community support</li>
+          <li>All core features</li>
+        </ul>
+        <a href="https://github.com/coderhema/kri" class="plan-btn" target="_blank">View on GitHub</a>
+      </div>
+      <div class="plan featured">
+        <p class="plan-name">Pro</p>
+        <p class="plan-price">$49</p>
+        <p class="plan-period">per month, hosted</p>
+        <ul class="plan-features">
+          <li>Up to 10 sites</li>
+          <li>Managed hosting</li>
+          <li>Agency dashboard</li>
+          <li>Priority support</li>
+        </ul>
+        <a href="#waitlist" class="plan-btn">Join waitlist</a>
+      </div>
+      <div class="plan">
+        <p class="plan-name">Agency</p>
+        <p class="plan-price">$149</p>
+        <p class="plan-period">per month, hosted</p>
+        <ul class="plan-features">
+          <li>Unlimited sites</li>
+          <li>White label</li>
+          <li>Custom branding</li>
+          <li>Dedicated support</li>
+        </ul>
+        <a href="#waitlist" class="plan-btn">Join waitlist</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- WAITLIST -->
+  <section class="waitlist" id="waitlist">
+    <h2 class="reveal">Be first to wrap.</h2>
+    <p class="reveal">Early access is limited. Join the waitlist and we'll reach out when Kri is ready for your agency.</p>
+    <div class="waitlist-form reveal">
+      <input type="email" placeholder="your@agency.com" id="waitlist-email" />
+      <button onclick="handleWaitlist('waitlist-email', 'waitlist-success')">Join waitlist</button>
+    </div>
+    <p class="success-msg" id="waitlist-success">✓ You're on the list. We'll be in touch.</p>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <a href="#" class="footer-logo">kri</a>
+    <ul class="footer-links">
+      <li><a href="https://github.com/coderhema/kri" target="_blank">GitHub</a></li>
+      <li><a href="#">Docs</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+  </footer>
+
+  <script>
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    reveals.forEach(el => observer.observe(el));
+
+    // Tab switching
+    function switchTab(btn, tabId) {
+      document.querySelectorAll('.vtab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      ['tab-meta', 'tab-file', 'tab-code'].forEach(id => {
+        document.getElementById(id).style.display = id === tabId ? 'block' : 'none';
+      });
+    }
+
+    // Waitlist handler
+    function handleWaitlist(inputId, successId) {
+      const input = document.getElementById(inputId);
+      const success = document.getElementById(successId);
+      const email = input.value.trim();
+      if (!email || !email.includes('@')) {
+        input.style.borderColor = '#fca5a5';
+        setTimeout(() => input.style.borderColor = '', 1000);
+        return;
+      }
+      input.parentElement.style.display = 'none';
+      success.style.display = 'block';
+    }
+  </script>
+
+</body>
+</html>
