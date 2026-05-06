@@ -16,7 +16,7 @@
     "utils",
     "README.md"
   ],
-  "main": "server/index.js",
+  "main": "server/index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
