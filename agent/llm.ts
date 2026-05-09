@@ -1,6 +1,10 @@
+import 'dotenv/config';
 import { OpenAI } from 'openai';
 
 export class LLM {
+  model: string;
+  client: OpenAI;
+
   constructor(model = 'claude-3-haiku') {
     this.model = model;
     this.client = new OpenAI({

@@ -2,7 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { execSync } = require('child_process');
+const { execSync, spawn } = require('child_process');
 
 const KRI_CONFIG_PATH = path.join(process.env.HOME, '.kri', 'config.json');
 
@@ -29,7 +29,22 @@ function addSite(url) {
 
 function startServer() {
   console.log('🚀 Starting Kri server...');
-  execSync('node server/index.ts', { stdio: 'inherit' });
+  // Use ts-node with ESM support
+  const serverPath = path.join(__dirname, '..', 'server', 'index.ts');
+  const child = spawn('npx', ['ts-node', '--esm', serverPath], {
+    stdio: 'inherit',
+    shell: true,
+    env: { ...process.env, TS_NODE_PROJECT: path.join(__dirname, '..', 'tsconfig.json') }
+  });
+  
+  child.on('error', (err) => {
+    console.error('Failed to start server:', err);
+    process.exit(1);
+  });
+  
+  child.on('close', (code) => {
+    process.exit(code);
+  });
 }
 
 const args = process.argv.slice(2);

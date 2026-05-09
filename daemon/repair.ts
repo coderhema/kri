@@ -1,19 +1,23 @@
 import { LLM } from '../agent/llm.ts';
-import { FlueSession } from '../agent/flue-session.ts';
 import { Memory } from '../agent/memory.ts';
 
 export class Daemon {
-  constructor(siteId, config) {
+  siteId: string;
+  config: any;
+  llm: LLM;
+  memory: Memory;
+  lastDOM: any;
+
+  constructor(siteId: string, config: any) {
     this.siteId = siteId;
     this.config = config;
     this.llm = new LLM(config.agent);
-    this.flue = new FlueSession(config.agent?.model || 'anthropic/claude-sonnet-4-6');
     this.memory = new Memory(siteId);
     this.lastDOM = null;
   }
 
   async init() {
-    await this.flue.init();
+    // No initialization needed for LLM
   }
 
   async monitor() {
@@ -55,7 +59,7 @@ export class Daemon {
     const fixes = [];
 
     for (const change of changedSelectors) {
-      const newSelector = await this.flue.repairSelector(change);
+      const newSelector = await this.llm.repairSelector(change);
       if (newSelector) {
         await this.memory.updateSelector(change.old, newSelector);
         fixes.push({ old: change.old, new: newSelector });

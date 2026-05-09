@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -7,7 +8,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
@@ -54,11 +55,12 @@ app.post('/api/agent/execute', async (req, res) => {
     return res.status(400).json({ success: false, error: 'Site not enabled or not found' });
   }
 
-  const site = sites.get(siteId);
-  const operator = new Operator(siteId, {
-    agent: 'claude-3-haiku',
-    daemon: true
-  });
+    const site = sites.get(siteId);
+    const operator = new Operator(siteId, {
+      agent: 'claude-3-haiku',
+      daemon: true,
+      url: site.url
+    });
 
   try {
     await operator.init();

@@ -1,13 +1,15 @@
 export class Executor {
+  browser: any;
+  page: any;
+
   constructor() {
     this.browser = null;
     this.page = null;
   }
 
   async execute(step) {
+    const { action, selector, value } = step;
     try {
-      const { action, selector, value } = step;
-
       switch (action) {
         case 'navigate':
           await this.page.goto(value);
