@@ -1,4 +1,4 @@
-import level from 'level';
+import { Level } from 'level';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -6,10 +6,14 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export class Memory {
-  constructor(siteId) {
+  dbPath: string;
+  siteId: string;
+  db: Level;
+
+  constructor(siteId: string) {
     this.dbPath = path.join(__dirname, '..', '..', 'memory', 'sites');
     this.siteId = siteId;
-    this.db = level(this.dbPath);
+    this.db = new Level(this.dbPath);
   }
 
   async getCurrentDOM() {

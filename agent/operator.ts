@@ -1,26 +1,39 @@
 import { LLM } from './llm.ts';
-import { FlueSession } from './flue-session.ts';
 import { Executor } from './executor.ts';
 import { Memory } from './memory.ts';
+import { getBrowserManager } from './browser.ts';
 
 export class Operator {
-  constructor(siteId, config) {
+  siteId: string;
+  config: any;
+  llm: LLM;
+  executor: Executor;
+  memory: Memory;
+
+  constructor(siteId: string, config: any) {
     this.siteId = siteId;
     this.config = config;
     this.llm = new LLM(config.agent);
-    this.flue = new FlueSession(config.agent?.model || 'anthropic/claude-sonnet-4-6');
     this.executor = new Executor();
     this.memory = new Memory(siteId);
   }
 
-  async init() {
-    await this.flue.init();
+  async init(): Promise<void> {
+    const browserManager = await getBrowserManager();
+    const siteUrl = this.config.url || `https://${this.siteId}`;
+    const page = await browserManager.getPage(this.siteId, siteUrl);
+    
+    if (page) {
+      await this.executor.init(page);
+      console.log(`[Operator] Executor initialized with page for ${this.siteId}`);
+    } else {
+      console.warn(`[Operator] No page available for ${this.siteId}, executor may not work`);
+    }
   }
 
-  async executeTask(userInput) {
+  async executeTask(userInput: string): Promise<any> {
     const context = await this.memory.getContext();
-
-    const plan = await this.flue.planTask(userInput, context);
+    const plan = await this.llm.planTask(userInput, context);
 
     const results = [];
     for (const step of plan) {
@@ -36,11 +49,11 @@ export class Operator {
     };
   }
 
-  async repairSelector(change) {
-    return await this.flue.repairSelector(change);
+  async repairSelector(change: any): Promise<string> {
+    return await this.llm.repairSelector(change);
   }
 
-  async close() {
-    await this.flue.close();
+  async close(): Promise<void> {
+    // Page cleanup handled by BrowserManager
   }
 }
